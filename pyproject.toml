@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "strava-activity-update"
+version = "0.1.0"
+description = ""
+authors = ["Kaden"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+stravalib = "^1.5"
+aws-lambda-typing = "^2.18.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+mypy = "^1.7.0"
+ruff = "^0.1.6"
+boto3 = "^1.29.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
