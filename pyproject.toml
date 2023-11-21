@@ -1,9 +1,9 @@
 [project]
 name = "upload_garmin_runs_to_strava"
-version = ""
+version = "0.10.1"
 description = ""
 authors = [
-    {name = "Kaden", email = ""},
+    {name = "Kaden"},
 ]
 dependencies = [
     "aws-lambda-typing>=2.18.0",
@@ -15,6 +15,7 @@ readme = "README.md"
 license = {text = "MIT"}
 
 [tool.mypy]
+packages = ["lambda", "tests", "scripts"]
 ignore_missing_imports = true
 
 [tool.ruff]
