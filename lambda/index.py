@@ -17,6 +17,6 @@ def handler(_: events.EventBridgeEvent, context: context_.Context) -> None:
 
   strava_activity_ids = strava_client.get_activity_external_ids()
   for activity in garmin_client.get_activities():
-    if activity.activity_id not in strava_activity_ids:
+    if f"{activity.activity_id}.fit" not in strava_activity_ids:
       with garmin_client.get_fit_data(activity.activity_id) as fit_data:
         strava_client.upload_activity(fit_data, activity.activity_id)
