@@ -3,6 +3,7 @@
 ## Tools
 * Terraform - [installation](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
 * PDM - [installation](https://pdm-project.org/latest/#recommended-installation-method)
+* Pre-commit - [installation](https://pre-commit.com/#installation)
 
 ## Setup
 You will need to set up an API application in Strava settings (see [instructions](https://developers.strava.com/docs/getting-started/#account)). Use `localhost:9321` as your path. Note your Client ID, Client Secret.
@@ -44,6 +45,11 @@ pdm venv activate
 Install prod and dev dependencies with
 ```bash
 pdm install
+```
+
+Before committing, make sure to run
+```bash
+pre-commit install
 ```
 
 ## Linting

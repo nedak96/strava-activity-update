@@ -11,7 +11,7 @@ resource "terraform_data" "install_python_dependencies" {
     }
   }
   triggers_replace = {
-    always_run = timestamp()
+    requirements = filebase64sha256("${path.module}/../requirements.txt")
   }
 }
 

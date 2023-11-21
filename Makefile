@@ -1,4 +1,4 @@
-.PHONY: tf-plan tf-apply format check
+.PHONY: tf-plan tf-apply format check get-token, requirements-export
 
 tf-init:
 	@terraform -chdir=terraform init

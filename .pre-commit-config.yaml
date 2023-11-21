@@ -19,3 +19,9 @@ repos:
         args: [-o, requirements.txt, --without-hashes, --prod]
         files: ^pdm.lock$
       - id: pdm-lock-check
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.83.6
+    hooks:
+      - id: terraform_fmt
+        args: [--args=-write=false]
+      - id: terraform_validate
