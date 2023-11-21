@@ -164,5 +164,7 @@ cython_debug/
 terraform.tfstate*
 files/
 .ruff_cache
+.garminconnect
+.pdm-python
 
 tmp

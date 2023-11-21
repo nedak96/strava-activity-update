@@ -9,12 +9,12 @@ data "aws_iam_policy_document" "assume_role_policy" {
   }
 }
 
-resource "aws_iam_role" "update_strava_activity_role" {
-  name               = "update-strava-activity-role"
+resource "aws_iam_role" "upload_garmin_runs_to_strava_role" {
+  name               = "upload-garmin-runs-to-strava-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
-data "aws_iam_policy_document" "update_strava_activity_policy_doc" {
+data "aws_iam_policy_document" "upload_garmin_runs_to_strava_policy_doc" {
   statement {
     actions = [
       "logs:CreateLogGroup",
@@ -33,13 +33,13 @@ data "aws_iam_policy_document" "update_strava_activity_policy_doc" {
   }
 }
 
-resource "aws_iam_policy" "update_strava_activity_policy" {
-  name        = "update-strava-activity-policy"
-  description = "Policy for the update Strava activity lambda function"
-  policy      = data.aws_iam_policy_document.update_strava_activity_policy_doc.json
+resource "aws_iam_policy" "upload_garmin_runs_to_strava_policy" {
+  name        = "upload-garmin-runs-to-strava-policy"
+  description = "Policy for the upload Garmin runs to Strava lambda function"
+  policy      = data.aws_iam_policy_document.upload_garmin_runs_to_strava_policy_doc.json
 }
 
-resource "aws_iam_role_policy_attachment" "update_strava_activity" {
-  role       = aws_iam_role.update_strava_activity_role.name
-  policy_arn = aws_iam_policy.update_strava_activity_policy.arn
+resource "aws_iam_role_policy_attachment" "upload_garmin_runs_to_strava" {
+  role       = aws_iam_role.upload_garmin_runs_to_strava_role.name
+  policy_arn = aws_iam_policy.upload_garmin_runs_to_strava_policy.arn
 }

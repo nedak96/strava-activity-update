@@ -1,22 +1,30 @@
-[tool.poetry]
-name = "strava-activity-update"
-version = "0.1.0"
+[project]
+name = "upload_garmin_runs_to_strava"
+version = ""
 description = ""
-authors = ["Kaden"]
-license = "MIT"
+authors = [
+    {name = "Kaden", email = ""},
+]
+dependencies = [
+    "aws-lambda-typing>=2.18.0",
+    "stravalib>=1.5",
+    "garth>=0.4.18",
+]
+requires-python = ">=3.11"
 readme = "README.md"
+license = {text = "MIT"}
 
-[tool.poetry.dependencies]
-python = "^3.11"
-stravalib = "^1.5"
-aws-lambda-typing = "^2.18.0"
+[tool.mypy]
+ignore_missing_imports = true
 
-[tool.poetry.group.dev.dependencies]
-pytest = "^7.4.3"
-mypy = "^1.7.0"
-ruff = "^0.1.6"
-boto3 = "^1.29.3"
+[tool.ruff]
+indent-width = 2
+select = ["E4", "E7", "E9", "F", "I"]
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.pdm.dev-dependencies]
+dev = [
+    "mypy>=1.7.0",
+    "ruff>=0.1.6",
+    "boto3>=1.29.4",
+]
+

@@ -14,6 +14,16 @@ variable "strava_initial_refresh_token" {
   type        = string
 }
 
+variable "garmin_username" {
+  description = "Garmin login email"
+  type        = string
+}
+
+variable "garmin_password" {
+  description = "Garmin login password"
+  type        = string
+}
+
 locals {
   refresh_token_key = "refresh_token"
   access_token_key  = "access_token"
