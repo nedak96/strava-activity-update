@@ -36,6 +36,11 @@ resource "aws_lambda_function" "upload_garmin_runs_to_strava" {
   }
 }
 
+resource "aws_cloudwatch_log_group" "upload_garmin_runs_to_strava_lambda_logs" {
+  name = "/aws/lambda/${aws_lambda_function.upload_garmin_runs_to_strava.function_name}"
+  retention_in_days = 3
+}
+
 resource "aws_cloudwatch_event_rule" "every_minute" {
   name                = "every-minute"
   description         = "Fires every minute"
