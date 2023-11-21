@@ -24,8 +24,8 @@ graph LR;
   trigger -- Trigger every minute --> lambda;
   lambda_layer --> lambda;
   lambda <-- Strava access tokens --> db;
-  lambda <-- Fetch runs --> garmin;
-  lambda <-- Upload activity --> strava;
+  lambda <-- Fetch activities --> garmin;
+  lambda <-- Upload activities --> strava;
   lambda --> logs;
 ```
 
