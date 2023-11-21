@@ -12,12 +12,12 @@ Components:
 ```mermaid
 graph LR;
   trigger(CloudWatch Event);
-  lambda("`Lambda Function
-  upload-strava-runs-to-garmin`");
-  lambda_layer[/"`Lambda Layer
-  python-dependencies-layer`"/];
-  db[("`DynamoDB
-  strava_tokens`")];
+  lambda("Lambda Function
+  upload-strava-runs-to-garmin");
+  lambda_layer[/"Lambda Layer
+  python-dependencies-layer"/];
+  db[("DynamoDB
+  strava_tokens")];
   strava(Strava API);
   garmin(Garmin API);
   logs(CloudWatch Logs);
