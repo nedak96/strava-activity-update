@@ -11,22 +11,22 @@ Components:
 
 ```mermaid
 graph LR;
-  trigger(CloudWatch Event)
+  trigger(CloudWatch Event);
   lambda(Lambda Function
-  upload-strava-runs-to-garmin)
+  upload-strava-runs-to-garmin);
   lambda_layer[/Lambda Layer
-  python-dependencies-layer/]
+  python-dependencies-layer/];
   db[(DynamoDB
-  strava_tokens)]
-  strava(Strava API)
-  garmin(Garmin API)
-  logs(CloudWatch Logs)
+  strava_tokens)];
+  strava(Strava API);
+  garmin(Garmin API);
+  logs(CloudWatch Logs);
   trigger -- Trigger every minute --> lambda;
   lambda_layer --> lambda;
   lambda <-- Strava access tokens --> db;
-  lambda <-- Fetch runs --> garmin
-  lambda <-- Upload activity --> strava
-  lambda --> logs
+  lambda <-- Fetch runs --> garmin;
+  lambda <-- Upload activity --> strava;
+  lambda --> logs;
 ```
 
 ## Business logic
