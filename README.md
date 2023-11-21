@@ -1,5 +1,65 @@
 # Upload Garmin runs to Strava Lambda function
 
+## Architecture
+Components:
+* Lambda Function: performs the business logic
+* Lambda Layer: provides the dependencies for the function
+* CloudWatch Event: triggers the Lambda Function every minute
+* DynamoDB: stores Strava credentials (cheapest option, ideally would use SecretsManager)
+* CloudWatch Logs: stores Lambda Function logs
+* IAM role/policy: allows the Lambda Function to write to CloudWatch Logs and read/write to DynamoDB
+
+```mermaid
+graph LR;
+  trigger(CloudWatch Event)
+  lambda(Lambda Function
+  upload-strava-runs-to-garmin)
+  lambda_layer[/Lambda Layer
+  python-dependencies-layer/]
+  db[(DynamoDB
+  strava_tokens)]
+  strava(Strava API)
+  garmin(Garmin API)
+  logs(CloudWatch Logs)
+  trigger -- Trigger every minute --> lambda;
+  lambda_layer --> lambda;
+  lambda <-- Strava access tokens --> db;
+  lambda <-- Fetch runs --> garmin
+  lambda <-- Upload activity --> strava
+  lambda --> logs
+```
+
+## Business logic
+Note: Ephemeral storage is the `/tmp` directory in the Lambda function.
+
+```mermaid
+sequenceDiagram;
+  participant lambda as Lambda Function;
+  participant storage as Ephemeral storage;
+  participant db as DynamoDB;
+  participant strava as Strava API;
+  participant garmin as Garmin API;
+  lambda ->> storage: Check for Garmin credentials;
+  alt Invalid credentials
+    lambda ->> garmin: Login with credentials;
+    lambda ->> storage: Store credentials;
+  end
+  lambda ->> db: Get Strava access token;
+  alt Invalid credentials
+    lambda ->> db: Get Strava refresh token;
+    lambda ->> strava: Refresh access token;
+    lambda ->> db: Store Strava tokens;
+  end
+  lambda ->> strava: Fetch Strava activities;
+  lambda ->> garmin: Fetch Garmin activities;
+  loop Garmin activities not in strava activities;
+    lambda ->> garmin: Download FIT zip file;
+    lambda ->> storage: Store FIT zip file;
+    storage ->> storage: Extract zip contents;
+    lambda ->> strava: Upload FIT file;
+  end
+```
+
 ## Tools
 * Terraform - [installation](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
 * PDM - [installation](https://pdm-project.org/latest/#recommended-installation-method)
