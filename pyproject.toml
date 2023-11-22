@@ -16,7 +16,6 @@ license = {text = "MIT"}
 
 [tool.mypy]
 packages = ["lambda", "tests", "scripts"]
-ignore_missing_imports = true
 
 [tool.ruff]
 indent-width = 2
@@ -29,5 +28,6 @@ dev = [
     "mypy>=1.7.0",
     "ruff>=0.1.6",
     "boto3>=1.29.4",
+    "boto3-stubs[dynamodb]>=1.29.5",
 ]
 

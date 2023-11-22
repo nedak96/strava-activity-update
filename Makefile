@@ -15,7 +15,7 @@ format:
 	@ruff check lambda scripts tests --fix
 
 check:
-	@mypy lambda
+	@mypy
 	@ruff check lambda scripts tests
 	@ruff format lambda scripts tests --check
 

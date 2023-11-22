@@ -2,11 +2,21 @@ import logging
 import time as epochtime
 from datetime import datetime, time
 from io import BufferedReader
-from typing import Any, Dict, Set
+from typing import TYPE_CHECKING, Dict, Set
 
 import boto3
-import constants
 from stravalib import Client
+
+from .constants import (
+  ACCESS_TOKEN_KEY,
+  REFRESH_TOKEN_KEY,
+  STRAVA_CLIENT_ID,
+  STRAVA_CLIENT_SECRET,
+  STRAVA_TOKENS_TABLE_NAME,
+)
+
+if TYPE_CHECKING:
+  from mypy_boto3_dynamodb.service_resource import Table
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -16,14 +26,14 @@ class Token:
   token_type: str
   token: str
   expires_at: float
-  __table: Any
+  __table: Table
   __key: str
 
   @property
   def table_key(self) -> Dict[str, str]:
     return {"token_type": self.__key}
 
-  def __init__(self, table: Any, key: str) -> None:
+  def __init__(self, table: Table, key: str) -> None:
     self.__key = key
     self.__table = table
     logger.info("Getting record: %s", self.__key)
@@ -42,9 +52,11 @@ class Token:
       self.__table.update_item(
         Key=self.table_key,
         UpdateExpression="SET #T = :token, expires_at = :expires_at",
-        ExpressionAttributeValues={":token": token, ":expires_at": expires_at},
+        ExpressionAttributeValues={":token": token, ":expires_at": int(expires_at)},
         ExpressionAttributeNames={"#T": "token"},
       )
+      self.expires_at = expires_at
+      self.token = token
     except Exception as e:
       logger.error("Error refreshing token")
       raise e
@@ -56,17 +68,17 @@ class StravaClient:
   def __init__(self) -> None:
     self.client = Client()
     dynamodb = boto3.resource("dynamodb")
-    table = dynamodb.Table(constants.STRAVA_TOKENS_TABLE_NAME)
+    table = dynamodb.Table(STRAVA_TOKENS_TABLE_NAME)
 
-    access_token = Token(table, constants.ACCESS_TOKEN_KEY)
+    access_token = Token(table, ACCESS_TOKEN_KEY)
 
     if epochtime.time() > access_token.expires_at:
       logger.info("Refreshing token")
-      refresh_token = Token(table, constants.REFRESH_TOKEN_KEY)
+      refresh_token = Token(table, REFRESH_TOKEN_KEY)
       try:
         refresh_response = self.client.refresh_access_token(
-          constants.STRAVA_CLIENT_ID,
-          constants.STRAVA_CLIENT_SECRET,
+          STRAVA_CLIENT_ID,
+          STRAVA_CLIENT_SECRET,
           refresh_token.token,
         )
       except Exception as e:

@@ -6,8 +6,16 @@ from io import BufferedReader
 from typing import Any, Dict, List
 from zipfile import ZipFile
 
-import constants
 import garth
+
+from .constants import (
+  DOWNLOAD_DIR,
+  GARMIN_ACTIVITIES_PATH,
+  GARMIN_DOWNLOAD_FILES_PATH,
+  GARMIN_PASSWORD,
+  GARMIN_TOKEN_FILE_PATH,
+  GARMIN_USERNAME,
+)
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -43,19 +51,19 @@ class GarminClient:
     self.garth_client = garth.Client()
     try:
       logger.info("Logging in with tokenfile")
-      self.garth_client.load(constants.GARMIN_TOKEN_FILE_PATH)
+      self.garth_client.load(GARMIN_TOKEN_FILE_PATH)
     except Exception as e:
       logger.warning(
         "Error logging in with tokenfile, logging in with credentials: %s", e
       )
-      self.garth_client.login(constants.GARMIN_USERNAME, constants.GARMIN_PASSWORD)
-      self.garth_client.dump(constants.GARMIN_TOKEN_FILE_PATH)
+      self.garth_client.login(GARMIN_USERNAME, GARMIN_PASSWORD)
+      self.garth_client.dump(GARMIN_TOKEN_FILE_PATH)
 
   def get_activities(self) -> List[GarminActivity]:
     logger.info("Fetching activities from Garmin")
     try:
       activities = self.garth_client.connectapi(
-        constants.GARMIN_ACTIVITIES_PATH,
+        GARMIN_ACTIVITIES_PATH,
         params={
           "startDate": datetime.today().strftime("%Y-%m-%d"),
           "activityType": "running",
@@ -68,13 +76,13 @@ class GarminClient:
     return [GarminActivity(a) for a in activities]
 
   def get_fit_data(self, activityId) -> FitData:
-    zip_file_path = f"{constants.DOWNLOAD_DIR}/{activityId}.zip"
+    zip_file_path = f"{DOWNLOAD_DIR}/{activityId}.zip"
     fit_file_path: str
     logger.info("Downloading activity from Garmin: %s", activityId)
     try:
       with self.garth_client.get(
         "connectapi",
-        f"{constants.GARMIN_DOWNLOAD_FILES_PATH}/{activityId}",
+        f"{GARMIN_DOWNLOAD_FILES_PATH}/{activityId}",
         api=True,
         stream=True,
       ) as resp:
@@ -88,8 +96,8 @@ class GarminClient:
     logger.info("Extract zip data: %s", activityId)
     with ZipFile(zip_file_path) as zip:
       filename = zip.namelist()[0]
-      fit_file_path = f"{constants.DOWNLOAD_DIR}/{filename}"
-      zip.extract(filename, path=constants.DOWNLOAD_DIR)
+      fit_file_path = f"{DOWNLOAD_DIR}/{filename}"
+      zip.extract(filename, path=DOWNLOAD_DIR)
     os.remove(zip_file_path)
 
     return FitData(fit_file_path)
