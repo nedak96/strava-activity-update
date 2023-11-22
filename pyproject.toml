@@ -15,7 +15,7 @@ readme = "README.md"
 license = {text = "MIT"}
 
 [tool.mypy]
-packages = ["lambda", "tests", "scripts"]
+packages = ["src", "tests", "scripts"]
 
 [tool.ruff]
 indent-width = 2

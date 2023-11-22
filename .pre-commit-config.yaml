@@ -5,9 +5,9 @@ repos:
     rev: v0.1.6
     hooks:
       - id: ruff
-        args: [lambda, scripts, tests]
+        args: [src, scripts, tests]
       - id: ruff-format
-        args: [lambda, scripts, tests, --check]
+        args: [src, scripts, tests, --check]
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.7.0
     hooks:

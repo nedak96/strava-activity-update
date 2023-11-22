@@ -11,13 +11,13 @@ tf-apply:
 
 format:
 	@terraform -chdir=terraform fmt
-	@ruff format lambda scripts tests
-	@ruff check lambda scripts tests --fix
+	@ruff format src scripts tests
+	@ruff check src scripts tests --fix
 
 check:
 	@mypy
-	@ruff check lambda scripts tests
-	@ruff format lambda scripts tests --check
+	@ruff check src scripts tests
+	@ruff format src scripts tests --check
 
 get-token:
 	@python scripts/get_strava_refresh_token.py

@@ -3,6 +3,7 @@ import time as epochtime
 from datetime import datetime, time
 from io import BufferedReader
 from typing import TYPE_CHECKING, Dict, Set
+from zoneinfo import ZoneInfo
 
 import boto3
 from stravalib import Client
@@ -17,7 +18,10 @@ from .constants import (
 
 if TYPE_CHECKING:
   from mypy_boto3_dynamodb.service_resource import Table
+else:
+  Table = object
 
+tz = ZoneInfo("America/New_York")
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
@@ -96,7 +100,7 @@ class StravaClient:
     logger.info("Fetching Strava activities")
     try:
       strava_activities = self.client.get_activities(
-        after=datetime.combine(datetime.now(), time.min)
+        after=datetime.combine(datetime.now(tz), time.min)
       )
     except Exception as e:
       logger.error("Error fetching Strava activities: %s", e)

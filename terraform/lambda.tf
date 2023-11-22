@@ -6,7 +6,7 @@ locals {
 
 data "archive_file" "source_code_zip" {
   type        = "zip"
-  source_dir  = "${path.module}/../lambda"
+  source_dir  = "${path.module}/../src"
   output_path = "${path.module}/files/upload-garmin-runs-to-strava.zip"
 }
 
@@ -14,7 +14,7 @@ resource "aws_lambda_function" "upload_garmin_runs_to_strava" {
   filename         = data.archive_file.source_code_zip.output_path
   function_name    = local.function_name
   role             = aws_iam_role.upload_garmin_runs_to_strava_role.arn
-  handler          = "index.handler"
+  handler          = "upload_garmin_runs_to_strava.handler"
   runtime          = local.runtime
   timeout          = 30
   source_code_hash = data.archive_file.source_code_zip.output_base64sha256

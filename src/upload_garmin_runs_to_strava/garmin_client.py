@@ -5,6 +5,7 @@ from datetime import datetime
 from io import BufferedReader
 from typing import Any, Dict, List
 from zipfile import ZipFile
+from zoneinfo import ZoneInfo
 
 import garth
 
@@ -17,6 +18,7 @@ from .constants import (
   GARMIN_USERNAME,
 )
 
+tz = ZoneInfo("America/New_York")
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
@@ -65,7 +67,7 @@ class GarminClient:
       activities = self.garth_client.connectapi(
         GARMIN_ACTIVITIES_PATH,
         params={
-          "startDate": datetime.today().strftime("%Y-%m-%d"),
+          "startDate": datetime.now(tz).strftime("%Y-%m-%d"),
           "activityType": "running",
         },
       )
