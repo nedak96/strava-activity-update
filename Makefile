@@ -1,4 +1,4 @@
-.PHONY: tf-plan tf-apply format check get-token, requirements-export
+.PHONY: tf-plan tf-apply format check get-token requirements-export test
 
 tf-init:
 	@terraform -chdir=terraform init
@@ -24,3 +24,6 @@ get-token:
 
 requirements-export:
 	pdm export -o requirements.txt -f requirements --without-hashes --prod
+
+test:
+	pytest

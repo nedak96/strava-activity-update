@@ -15,7 +15,8 @@ readme = "README.md"
 license = {text = "MIT"}
 
 [tool.mypy]
-packages = ["src", "tests", "scripts"]
+packages = ["upload_garmin_runs_to_strava", "tests"]
+no_namespace_packages = true
 
 [tool.ruff]
 indent-width = 2
@@ -23,11 +24,28 @@ indent-width = 2
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F", "I"]
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+env = [
+    "STRAVA_TOKENS_TABLE_NAME=strava_tokens",
+    "ACCESS_TOKEN_KEY = access_token",
+    "REFRESH_TOKEN_KEY = refresh_token",
+    "STRAVA_CLIENT_ID = 123",
+    "STRAVA_CLIENT_SECRET = strava_client_secret",
+    "GARMIN_USERNAME = email@email.com",
+    "GARMIN_PASSWORD = password",
+]
+
 [tool.pdm.dev-dependencies]
 dev = [
     "mypy>=1.7.0",
     "ruff>=0.1.6",
     "boto3>=1.29.4",
     "boto3-stubs[dynamodb]>=1.29.5",
+]
+test = [
+    "pytest>=7.4.3",
+    "pytest-env>=1.1.1",
+    "pytest-mock>=3.12.0",
 ]
 
