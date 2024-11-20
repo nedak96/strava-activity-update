@@ -4,6 +4,7 @@ from unittest.mock import MagicMock, Mock, NonCallableMock, patch
 import pytest
 from pytest_mock import MockerFixture
 from upload_garmin_runs_to_strava.garmin_client import (
+  ActivityType,
   FitData,
   GarminActivity,
   GarminClient,
@@ -76,7 +77,7 @@ class TestGarminClient:
 
   def test_get_activities(self, mock_garth: MockGarth):
     mock_garth.connectapi.return_value = [{"activityId": "1"}, {"activityId": "2"}]
-    activities = GarminClient().get_activities()
+    activities = GarminClient().get_activities(ActivityType.RUNNING)
     assert len(activities) == 2
     assert "1" in [a.activity_id for a in activities]
     assert "2" in [a.activity_id for a in activities]
@@ -84,7 +85,7 @@ class TestGarminClient:
   def test_get_activities_error(self, mock_garth: MockGarth):
     mock_garth.connectapi.side_effect = Exception()
     with pytest.raises(Exception):
-      GarminClient().get_activities()
+      GarminClient().get_activities(ActivityType.RUNNING)
 
   @patch("upload_garmin_runs_to_strava.garmin_client.ZipFile", return_value=Mock)
   def test_get_fit_data(

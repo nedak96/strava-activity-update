@@ -89,9 +89,10 @@ class StravaClient:
         logger.error("Error refreshing token")
         raise e
 
-      refresh_token.update(refresh_response["refresh_token"])
+      refresh_token.update(refresh_response.access_token)
       access_token.update(
-        refresh_response["access_token"], refresh_response["expires_at"]
+        refresh_response.access_token,
+        refresh_response.expires_at,
       )
     else:
       self.client.access_token = access_token.token
@@ -100,7 +101,7 @@ class StravaClient:
     logger.info("Fetching Strava activities")
     try:
       strava_activities = self.client.get_activities(
-        after=datetime.combine(datetime.now(tz), time.min)
+        after=datetime.combine(datetime.now(tz), time.min),
       )
     except Exception as e:
       logger.error("Error fetching Strava activities: %s", e)

@@ -43,7 +43,7 @@ def main():
       client_id=client_id,
       redirect_uri=serverAddress,
       scope=["activity:write", "activity:read_all"],
-    )
+    ),
   )
   server.serve_forever()
 

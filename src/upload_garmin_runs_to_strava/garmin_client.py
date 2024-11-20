@@ -2,6 +2,7 @@ import logging
 import os
 import shutil
 from datetime import datetime
+from enum import Enum
 from io import BufferedReader
 from typing import Any, Dict, List
 from zipfile import ZipFile
@@ -21,6 +22,13 @@ from .constants import (
 tz = ZoneInfo("America/New_York")
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
+
+
+class ActivityType(Enum):
+  RUNNING = "running"
+  HIKING = "hiking"
+  CYCLING = "cycling"
+  SWIMMING = "swimming"
 
 
 class GarminActivity:
@@ -56,19 +64,20 @@ class GarminClient:
       self.garth_client.load(GARMIN_TOKEN_FILE_PATH)
     except Exception as e:
       logger.warning(
-        "Error logging in with tokenfile, logging in with credentials: %s", e
+        "Error logging in with tokenfile, logging in with credentials: %s",
+        e,
       )
       self.garth_client.login(GARMIN_USERNAME, GARMIN_PASSWORD)
       self.garth_client.dump(GARMIN_TOKEN_FILE_PATH)
 
-  def get_activities(self) -> List[GarminActivity]:
-    logger.info("Fetching activities from Garmin")
+  def get_activities(self, activity_type: ActivityType) -> List[GarminActivity]:
+    logger.info("Fetching activities from Garmin for type: %s", activity_type.value)
     try:
       activities = self.garth_client.connectapi(
         GARMIN_ACTIVITIES_PATH,
         params={
           "startDate": datetime.now(tz).strftime("%Y-%m-%d"),
-          "activityType": "running",
+          "activityType": activity_type.value,
         },
       )
     except Exception as e:

@@ -22,10 +22,6 @@ resource "aws_dynamodb_table_item" "initial_refresh_token" {
   "expires_at": {"N": "0"}
 }
 ITEM
-
-  lifecycle {
-    ignore_changes = [item]
-  }
 }
 
 resource "aws_dynamodb_table_item" "initial_access_token" {

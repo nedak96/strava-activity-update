@@ -51,7 +51,9 @@ def mock_strava_client(mocker: MockerFixture) -> MockStravaClient:
 
 class TestHandler:
   def test_handler(
-    self, mock_garmin_client: MockGarminClient, mock_strava_client: MockStravaClient
+    self,
+    mock_garmin_client: MockGarminClient,
+    mock_strava_client: MockStravaClient,
   ):
     handler(NonCallableMock(), NonCallableMock())
     mock_garmin_client.get_activities.assert_called_once()
@@ -60,7 +62,9 @@ class TestHandler:
     mock_strava_client.upload_activity.assert_called_once_with("data", "1")
 
   def test_handler_exit_early(
-    self, mock_garmin_client: MockGarminClient, mock_strava_client: MockStravaClient
+    self,
+    mock_garmin_client: MockGarminClient,
+    mock_strava_client: MockStravaClient,
   ):
     mock_garmin_client.get_activities.return_value = []
     handler(NonCallableMock(), NonCallableMock())

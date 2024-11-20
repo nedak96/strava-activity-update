@@ -3,7 +3,7 @@ import logging
 from aws_lambda_typing import context as context_
 from aws_lambda_typing import events
 
-from .garmin_client import GarminClient
+from .garmin_client import ActivityType, GarminClient
 from .strava_client import StravaClient
 
 logger = logging.getLogger()
@@ -14,7 +14,11 @@ def handler(_: events.EventBridgeEvent, context: context_.Context) -> None:
   logger.info("Starting lambda: %s", context.function_name)
 
   garmin_client = GarminClient()
-  activities = garmin_client.get_activities()
+  # Add any activity types you want imported to Strava
+  activities = [
+    *garmin_client.get_activities(ActivityType.RUNNING),
+    *garmin_client.get_activities(ActivityType.HIKING),
+  ]
   if not activities:
     return
 

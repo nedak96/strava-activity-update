@@ -4,10 +4,10 @@ tf-init:
 	@terraform -chdir=terraform init
 
 tf-plan:
-	@terraform -chdir=terraform plan
+	@terraform -chdir=terraform plan -var-file=./vars.tfvars
 
 tf-apply:
-	@terraform -chdir=terraform apply
+	@terraform -chdir=terraform apply -var-file=./vars.tfvars
 
 format:
 	@terraform -chdir=terraform fmt

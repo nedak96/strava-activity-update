@@ -166,5 +166,6 @@ files/
 .ruff_cache
 .garminconnect
 .pdm-python
+*.tfvars
 
 tmp

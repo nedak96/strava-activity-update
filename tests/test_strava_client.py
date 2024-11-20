@@ -25,7 +25,7 @@ def mock_dynamodb(mocker: MockerFixture) -> DynamoDBMock:
       "token": "123",
       "token_type": "access_token",
       "expires_at": (datetime.now() + timedelta(hours=1)).timestamp(),
-    }
+    },
   }
   mock = Mock(Table=Mock(return_value=table_mock))
   mocker.patch("boto3.resource", return_value=mock)
@@ -100,14 +100,16 @@ class TestStravaClient:
     assert mock_dynamodb.get_item.call_count == 1
 
   def test_init_refresh(
-    self, mock_dynamodb: DynamoDBMock, mock_stravalib: StravaLibMock
+    self,
+    mock_dynamodb: DynamoDBMock,
+    mock_stravalib: StravaLibMock,
   ):
     mock_dynamodb.get_item.return_value = {
       "Item": {
         "token": "123",
         "token_type": "access_token",
         "expires_at": 0,
-      }
+      },
     }
     StravaClient()
     mock_stravalib.refresh_access_token.assert_called_once()
@@ -115,22 +117,22 @@ class TestStravaClient:
     assert mock_dynamodb.get_item.call_count == 2
 
   def test_init_refresh_error(
-    self, mock_dynamodb: DynamoDBMock, mock_stravalib: StravaLibMock
+    self,
+    mock_dynamodb: DynamoDBMock,
+    mock_stravalib: StravaLibMock,
   ):
     mock_dynamodb.get_item.return_value = {
       "Item": {
         "token": "123",
         "token_type": "access_token",
         "expires_at": 0,
-      }
+      },
     }
     mock_stravalib.refresh_access_token.side_effect = Exception()
     with pytest.raises(Exception):
       StravaClient()
 
-  def test_get_activities(
-    self, mock_dynamodb: DynamoDBMock, mock_stravalib: StravaLibMock
-  ):
+  def test_get_activities(self, mock_stravalib: StravaLibMock):
     mock_stravalib.get_activities.return_value = [
       NonCallableMock(external_id="1"),
       NonCallableMock(external_id="2"),
@@ -140,27 +142,23 @@ class TestStravaClient:
     assert "1" in external_ids
     assert "2" in external_ids
 
-  def test_get_activities_error(
-    self, mock_dynamodb: DynamoDBMock, mock_stravalib: StravaLibMock
-  ):
+  def test_get_activities_error(self, mock_stravalib: StravaLibMock):
     mock_stravalib.get_activities.side_effect = Exception()
     with pytest.raises(Exception):
       StravaClient().get_activity_external_ids()
 
-  def test_upload_activity(
-    self, mock_dynamodb: DynamoDBMock, mock_stravalib: StravaLibMock
-  ):
+  def test_upload_activity(self, mock_stravalib: StravaLibMock):
     StravaClient().upload_activity(
-      NonCallableMock(read=Mock(return_value="data")), "external_id"
+      NonCallableMock(read=Mock(return_value="data")),
+      "external_id",
     )
     mock_stravalib.upload_activity.assert_called_once()
     mock_stravalib.upload_activity_wait.wait.assert_called_once()
 
-  def test_upload_activity_error(
-    self, mock_dynamodb: DynamoDBMock, mock_stravalib: StravaLibMock
-  ):
+  def test_upload_activity_error(self, mock_stravalib: StravaLibMock):
     mock_stravalib.upload_activity_wait.wait.side_effect = Exception()
     with pytest.raises(Exception):
       StravaClient().upload_activity(
-        NonCallableMock(read=Mock(return_value="data")), "external_id"
+        NonCallableMock(read=Mock(return_value="data")),
+        "external_id",
       )

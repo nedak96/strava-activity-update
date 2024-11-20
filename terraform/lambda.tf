@@ -30,10 +30,6 @@ resource "aws_lambda_function" "upload_garmin_runs_to_strava" {
       GARMIN_PASSWORD          = var.garmin_password
     }
   }
-
-  lifecycle {
-    ignore_changes = [environment]
-  }
 }
 
 resource "aws_cloudwatch_log_group" "upload_garmin_runs_to_strava_lambda_logs" {

@@ -22,7 +22,7 @@ no_namespace_packages = true
 indent-width = 2
 
 [tool.ruff.lint]
-select = ["E4", "E7", "E9", "F", "I"]
+select = ["E4", "E7", "E9", "F", "I", "COM812"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
